@@ -1,0 +1,38 @@
+<h2 ng-show="tableName" class="text-center">{{tableName}}<br><small>week {{weekNumber().use}}</small></h2>
+
+<ul>
+  <li><a ng-click="previousWeek()">Vorig &laquo;</a></li>
+  <li><a ng-click="currentWeek()">Huidig</a></li>
+  <li><a ng-click="nextWeek()">Volgend &raquo;</a></li>
+</ul>
+
+<div class="row">
+  <div class="small-15 medium-5 columns end">
+    <input type="text" ng-model="search" placeholder="Search for a class, room or teacher">
+    <button ng-click="updateurl()">Go</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-15 medium-3 columns" ng-repeat="day in days" ng-class="{'activeDay': isActiveDay(day.number)}">
+    <h3>
+      {{day.spelled}}<br>
+      <small>{{currentDayDate(day.number).format('D-M')}}</small>
+    </h3>
+
+    <div class="uur" ng-repeat="hour in hours">
+    {{hour.number}}<br>
+      <div ng-repeat="lesson in getHour(day.number, hour.number) track by lesson.uid">
+        {{lesson.subject}} - <a href="query/{{lesson.teacherAbbreviation}}">{{lesson.teacherAbbreviation}}</a><br>
+        <small>
+          <a href="query/{{lesson.room}}">{{lesson.room}}</a> - </a>
+
+          <span ng-repeat="class in lesson.classes">
+            <a href="query/{{class}}">{{class}}</a>{{ (!$last) ? ',' : ''}}
+          </span>
+        </small>
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>
