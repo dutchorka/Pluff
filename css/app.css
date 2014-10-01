@@ -99,51 +99,17 @@ th {
   padding-top: 3em;
 }
 
-@-webkit-keyframes ngdialog-flyin {
-  0% {
-    opacity: 0;
-    -ms-transform: translateY(-40px);
-    -webkit-transform: translateY(-40px);
-    transform: translateY(-40px);
-  }
-
-  100% {
-    opacity: 1;
-    -ms-transform: translateY(0);
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-  }
-}
-
 @keyframes ngdialog-flyin {
   0% {
     opacity: 0;
     -ms-transform: translateY(-40px);
-    -webkit-transform: translateY(-40px);
     transform: translateY(-40px);
   }
 
   100% {
     opacity: 1;
     -ms-transform: translateY(0);
-    -webkit-transform: translateY(0);
     transform: translateY(0);
-  }
-}
-
-@-webkit-keyframes ngdialog-flyout {
-  0% {
-    opacity: 1;
-    -ms-transform: translateY(0);
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-    -ms-transform: translateY(-40px);
-    -webkit-transform: translateY(-40px);
-    transform: translateY(-40px);
   }
 }
 
@@ -151,14 +117,12 @@ th {
   0% {
     opacity: 1;
     -ms-transform: translateY(0);
-    -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 
   100% {
     opacity: 0;
     -ms-transform: translateY(-40px);
-    -webkit-transform: translateY(-40px);
     transform: translateY(-40px);
   }
 }
@@ -171,6 +135,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -292,6 +257,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -354,7 +320,6 @@ img {
   background-color: #008cba;
   border-color: #007295;
   color: #FFFFFF;
-  -webkit-transition: background-color 300ms ease-out;
   transition: background-color 300ms ease-out;
 }
 
@@ -387,6 +352,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -435,6 +401,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -483,6 +450,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -545,7 +513,6 @@ img {
   background-color: #008cba;
   border-color: #007295;
   color: #FFFFFF;
-  -webkit-transition: background-color 300ms ease-out;
   transition: background-color 300ms ease-out;
 }
 
@@ -574,6 +541,42 @@ select::-ms-expand {
   display: none;
 }
 
+input[type="text"] {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+  background-color: #FFFFFF;
+  font-family: inherit;
+  border: 1px solid #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  display: block;
+  font-size: 0.875rem;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem;
+  height: 2.3125rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  transition: box-shadow 0.45s,border-color 0.45s ease-in-out;
+}
+
+input[type="text"]:focus {
+  box-shadow: 0 0 5px #999999;
+  border-color: #999999;
+}
+
+input[type="text"]:focus {
+  background: #fafafa;
+  border-color: #999999;
+  outline: none;
+}
+
+input[type="text"]:disabled {
+  background-color: #DDDDDD;
+  cursor: default;
+}
+
 html,
 body {
   height: 100%;
@@ -582,6 +585,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -630,6 +634,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -849,6 +854,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -910,6 +916,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -991,6 +998,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -1039,6 +1047,7 @@ body {
 *,
 *:before,
 *:after {
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -1081,7 +1090,6 @@ img {
 
 ng-view {
   opacity: 1;
-  -webkit-transition: all linear 0.5s;
   transition: all linear 0.5s;
 }
 
