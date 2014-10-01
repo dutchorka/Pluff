@@ -44,20 +44,10 @@ hr {
   height: 0;
 }
 
-input {
-  color: inherit;
-  font: inherit;
-  margin: 0;
-}
-
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
-}
-
-input {
-  line-height: normal;
 }
 
 table {
@@ -68,6 +58,40 @@ table {
 td,
 th {
   padding: 0;
+}
+
+.angucomplete-dropdown {
+  border: 1px solid #e7e7e7;
+  border-radius: 2px;
+  width: 250px;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 9999;
+  position: absolute;
+  margin-top: -6px;
+  background-color: #fff;
+}
+
+.angucomplete-searching {
+  color: #acacac;
+  font-size: 14px;
+}
+
+.angucomplete-description {
+  font-size: 14px;
+}
+
+.angucomplete-row {
+  padding: 5px;
+  color: #222;
+  margin-bottom: 4px;
+  clear: both;
+}
+
+.angucomplete-selected-row,
+.angucomplete-row:hover {
+  background-color: #008cba;
+  color: #fff;
 }
 
 .ngdialog {
