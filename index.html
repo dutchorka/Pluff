@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
 <html class="no-js" lang="nl" ng-app="pluffApp">
 
 <head>
@@ -7,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pluff | Check je Fontys ICT Rooster!</title>
 
-  <link rel="stylesheet" href="css/app.css?8de26dd16293">
+  <base href="/">
+
+  <link rel="stylesheet" href="css/app.css?d101daa02326">
 
   <link rel="apple-touch-icon" sizes="57x57" href="img/apple-touch-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png">
@@ -33,10 +34,6 @@
   <meta property="og:image" content="img/logo.png">
   <meta property="og:type" content="website">
   <meta property="og:description" content="Pluff laat je op een snelle manier je Fontys rooster zien. Sla het op in je bladwijzers en kijk met 1 klik je rooster terug!">
-  <meta property="og:url" content="{{ url() }}">
-
-  <!-- TODO: Test if necessary -->
-  <base href="/">
 
 </head>
 <body>
@@ -45,11 +42,24 @@
     <div class="small-15 columns">
       <h1>Pluff</h1>
 
-        <ng-view ng-show="tableData"></ng-view>
+      <ul>
+        <li><a ng-dialog="partials/dialog-holidays.html" ng-dialog-controller="HolidaysCtrl"><span translate>HOLIDAYS</span></a></li>
+        <li><a ng-dialog="partials/dialog-free-rooms.html" ng-dialog-controller="RoomsCtrl"><span translate>FREE_ROOMS</span></a></li>
+      </ul>
+
+      <ng-view></ng-view>
     </div>
+
+    <p ng-controller="LanguageCtrl">
+      <em>Pluff</em> 2.0.
+      <span translate>CHOOSE_LANGUAGE</span>
+      <a ng-click="switch('nl')">NL</a>
+      <a ng-click="switch('en')">EN</a>.
+      <span translate>HELP_US</span> <a href="https://github.com/SpaceK33z/FHICT-Rooster">Github</a>!
+    </p>
   </div>
 
-  <script src="js/plugins.min.js?cad7832ae056"></script>
-  <script src="js/bigapp.min.js?ac7b6cd85809"></script>
+  <script src="js/plugins.min.js?0a328361481c"></script>
+  <script src="js/bigapp.min.js?53400edf8f13"></script>
 </body>
 </html>

@@ -1,37 +1,51 @@
-<h2 ng-show="tableName" class="text-center">{{tableName}}<br><small>week {{weekNumber().use}}</small></h2>
+<h2 ng-show="tableTitle" class="text-center">{{tableTitle}}<br><small>week {{weekNumber().use}}</small></h2>
 
 <ul>
-  <li><a ng-click="previousWeek()">Vorig &laquo;</a></li>
-  <li><a ng-click="currentWeek()">Huidig</a></li>
-  <li><a ng-click="nextWeek()">Volgend &raquo;</a></li>
+  <li><a ng-click="previousWeek()" ng-class="{'old-week': isOldWeek()}">{{'PREVIOUS_WEEK' | translate}} &laquo;</a></li>
+  <li><a ng-click="currentWeek()">{{'CURRENT_WEEK' | translate}}</a></li>
+  <li><a ng-click="nextWeek()">{{'NEXT_WEEK' | translate}} &raquo;</a></li>
 </ul>
 
 <div class="row">
   <div class="small-15 medium-5 columns end">
-    <input type="text" ng-model="search" placeholder="Search for a class, room or teacher">
-    <button ng-click="updateurl()">Go</button>
+    <angucomplete-alt id="search-query"
+      placeholder="{{::'SEARCH_PLACEHOLDER' | translate}}"
+      pause="100"
+      selected-object="searchSelected"
+      local-data="searchAuto"
+      search-fields="name"
+      description-field="description"
+      title-field="name"
+      minlength="2"
+      text-searching="{{::'SEARCH_BUSY' | translate}}"
+      text-no-results="{{::'SEARCH_NO_RESULTS' | translate}}"
+      input-class="" />
   </div>
 </div>
 
 <div class="row">
-  <div class="small-15 medium-3 columns" ng-repeat="day in days" ng-class="{'activeDay': isActiveDay(day.number)}">
+  <div class="small-15 medium-3 columns" ng-repeat="day in ::days" ng-class="{'activeDay': isActiveDay(day.number)}">
     <h3>
-      {{day.spelled}}<br>
+      {{::day.spelled | translate}}<br>
       <small>{{currentDayDate(day.number).format('D-M')}}</small>
     </h3>
 
-    <div class="uur" ng-repeat="hour in hours">
-    {{hour.number}}<br>
-      <div ng-repeat="lesson in getHour(day.number, hour.number) track by lesson.uid">
-        {{lesson.subject}} - <a href="query/{{lesson.teacherAbbreviation}}">{{lesson.teacherAbbreviation}}</a><br>
+    <div class="uur" ng-repeat="hour in ::hours">
+    {{::hour.number}}.
+      <span ng-repeat="lesson in getHour(day.number, hour.number) track by lesson.uid">
+        {{::lessonStartEndTime(lesson.start, lesson.end)}}<br>
+        {{::lesson.subject}}
+        <span ng-if="lesson.teacherAbbreviation !== '-'">
+          - <a ng-click="teacherDialog(lesson.teacherAbbreviation)">{{::lesson.teacherAbbreviation}}</a>
+        </span><br>
         <small>
-          <a href="query/{{lesson.room}}">{{lesson.room}}</a> - </a>
+          <a href="room/{{::lesson.room}}">{{::lesson.room}}</a> - </a>
 
           <span ng-repeat="class in lesson.classes">
-            <a href="query/{{class}}">{{class}}</a>{{ (!$last) ? ',' : ''}}
+            <a href="class/{{::class}}">{{::class}}</a>{{ (!$last) ? ',' : ''}}
           </span>
-        </small>
-      </div>
+        </small><br>
+      </span>
       <hr>
     </div>
   </div>
