@@ -1,9 +1,9 @@
-<h2 ng-show="tableTitle" class="text-center">{{tableTitle}}<br><small>week {{weekNumber().use}}</small></h2>
+<h2 ng-show="tableTitle" class="text-center">{{tableTitle}}<br><small>week {{weekNumberUsed}}</small></h2>
 
 <ul>
-  <li><a ng-click="previousWeek()" ng-class="{'old-week': isOldWeek()}">{{'PREVIOUS_WEEK' | translate}} &laquo;</a></li>
-  <li><a ng-click="currentWeek()">{{'CURRENT_WEEK' | translate}}</a></li>
-  <li><a ng-click="nextWeek()">{{'NEXT_WEEK' | translate}} &raquo;</a></li>
+  <li><a ng-click="previousWeek()" ng-class="{'old-week': isOldWeek()}">{{::'PREVIOUS_WEEK' | translate}} &laquo;</a></li>
+  <li><a ng-click="currentWeek()">{{::'CURRENT_WEEK' | translate}}</a></li>
+  <li><a ng-click="nextWeek()">{{::'NEXT_WEEK' | translate}} &raquo;</a></li>
 </ul>
 
 <div class="row">
@@ -24,25 +24,24 @@
 </div>
 
 <div class="row">
-  <div class="small-15 medium-3 columns" ng-repeat="day in ::days" ng-class="{'activeDay': isActiveDay(day.number)}">
+  <div class="small-15 medium-3 columns" ng-repeat="day in weeks[(weekNumberUsed - 1)]" ng-class="{'activeDay': isActiveDay($index+1)}">
     <h3>
-      {{::day.spelled | translate}}<br>
-      <small>{{currentDayDate(day.number).format('D-M')}}</small>
+      {{::'DAY_' + ($index+1) | translate}}<br>
+      <small>{{currentDayDate($index+1).format('D-M')}} <strong>{{countLessons(day)}} {{::'LESSONS' | translate}}</strong></small>
     </h3>
-
-    <div class="uur" ng-repeat="hour in ::hours">
-    {{::hour.number}}.
-      <span ng-repeat="lesson in getHour(day.number, hour.number) track by lesson.uid">
-        {{::lessonStartEndTime(lesson.start, lesson.end)}}<br>
+    <div class="hour" ng-repeat="hour in day">
+      {{::hour.number}}.
+      <span ng-repeat="lesson in hour.lessons">
+        {{::lesson.start}} - {{::lesson.end}}<br>
         {{::lesson.subject}}
-        <span ng-if="lesson.teacherAbbreviation !== '-'">
-          - <a ng-click="teacherDialog(lesson.teacherAbbreviation)">{{::lesson.teacherAbbreviation}}</a>
+        <span ng-if="::lesson.teacher !== '-'">
+          - <a ng-click="teacherDialog(lesson.teacher)">{{::lesson.teacher}}</a>
         </span><br>
         <small>
-          <a href="room/{{::lesson.room}}">{{::lesson.room}}</a> - </a>
+          <a href="search/room/{{::encode(lesson.room)}}">{{::lesson.room}}</a> - </a>
 
           <span ng-repeat="class in lesson.classes">
-            <a href="class/{{::class}}">{{::class}}</a>{{ (!$last) ? ',' : ''}}
+            <a href="search/class/{{::encode(class)}}">{{::class}}</a>{{ (!$last) ? ',' : ''}}
           </span>
         </small><br>
       </span>

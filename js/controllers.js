@@ -12,43 +12,20 @@ function LanguageCtrl($scope, $translate, $route) {
     // Switch to the given language
     $translate.use($lang);
     // Full page reload to apply all languages
+    // This is necessary because of the one-time bindings used for performance reasons
     window.location.reload();
   }
 }
 
-function TimeTableCtrl($scope, $http, hourService, $window, $location, dataService, timetableData, ngDialog) {
-  $scope.days = [
-    {number: 1, spelled: 'MONDAY'},
-    {number: 2, spelled: 'TUESDAY'},
-    {number: 3, spelled: 'WEDNESDAY'},
-    {number: 4, spelled: 'THURSDAY'},
-    {number: 5, spelled: 'FRIDAY'}
-  ];
-
-  // TODO: start times probably aren't necessary (?)
-  $scope.hours = [
-    {number: 1, start: '08:45'},
-    {number: 2, start: '09:35'},
-    {number: 3, start: '10:45'},
-    {number: 4, start: '11:35'},
-    {number: 5, start: '12:25'},
-    {number: 6, start: '13:15'},
-    {number: 7, start: '14:05'},
-    {number: 8, start: '15:15'},
-    {number: 9, start: '16:05'},
-    {number: 10, start: '16:55'},
-    {number: 11, start: '18:00'},
-    {number: 12, start: '18:50'},
-    {number: 13, start: '20:00'},
-    {number: 14, start: '21:40'}
-  ];
-
+function TimeTableCtrl($scope, $http, lessonService, $window, $location, dataService, timetableData, ngDialog) {
   // Get the personal schedule from the API
-  $scope.tableData = timetableData.data;
+  $scope.weeks = lessonService.getTimeTable(timetableData.data);
   $scope.tableTitle = timetableData.title;
 
   // Set the default used weeknumber (without leading zero). In the weekend, use the next week number
   $scope.weekNumberUsed = parseInt((moment().day() > 5) ? moment().add(1, 'w').format('w') : moment().format('w'));
+  // Set the default used year number
+  $scope.yearUsed = parseInt(moment().format('YYYY'));
 
   $scope.weekNumber = function() {
     var weekInfo = {};
@@ -59,16 +36,22 @@ function TimeTableCtrl($scope, $http, hourService, $window, $location, dataServi
     // Set default weeknumber. In the weekend, use the next week number
     weekInfo.current = parseInt((currentTime.day() > 5) ? currentTime.add(1, 'w').format('w') : currentTime.format('w'));
     weekInfo.use = $scope.weekNumberUsed;
+    // Set default year
+    weekInfo.yearCurrent = parseInt(currentTime.format('YYYY'));
+    weekInfo.yearUse = $scope.yearUsed;
 
     // Rotate the number when the year has ended
     if (weekInfo.use === 53) {
       weekInfo.use = 1;
+      weekInfo.yearUse = parseInt(weekInfo.yearCurrent) + 1;
     }
     if (weekInfo.use === 0) {
       weekInfo.use = 52;
+      weekInfo.yearUse = parseInt(weekInfo.yearCurrent);
     }
 
     $scope.weekNumberUsed = weekInfo.use;
+    $scope.yearUsed = weekInfo.yearUse;
 
     return weekInfo;
   };
@@ -91,10 +74,6 @@ function TimeTableCtrl($scope, $http, hourService, $window, $location, dataServi
     console.log('Op naar de vorige week! ' + $scope.weekNumberUsed);
   };
 
-  $scope.getHour = function(dayNumber, hourNumber) {
-    return hourService.getHour($scope, dayNumber, hourNumber);
-  };
-
   // Bind keybindings to the window to enable right and left arrow navigation
   angular.element($window).on('keydown', function(e) {
     // Go to the next week on right arrow key
@@ -113,8 +92,18 @@ function TimeTableCtrl($scope, $http, hourService, $window, $location, dataServi
 
   // Calculate the date of the current day
   $scope.currentDayDate = function(dayNumber) {
-    // TODO: Don't hardcode the year!
-    return moment('2014-' + $scope.weekNumber().use + '-' + dayNumber, 'YYYY-w-d');
+    return moment($scope.weekNumber().yearUse + '-' + $scope.weekNumber().use + '-' + dayNumber, 'YYYY-w-d');
+  };
+
+  $scope.countLessons = function(day) {
+    var totalLessons = 0;
+
+    day.forEach(function(hour) {
+      var hourCount = parseInt(hour.lessons.length);
+      totalLessons = totalLessons + hourCount;
+    });
+
+    return totalLessons;
   }
 
   // Check if the current day is today
@@ -126,18 +115,10 @@ function TimeTableCtrl($scope, $http, hourService, $window, $location, dataServi
 
   // Check if the used week is older then or the same as the current week
   $scope.isOldWeek = function() {
-    if ($scope.weekNumberUsed <= $scope.weekNumber().current) {
+    if ($scope.weekNumberUsed <= $scope.weekNumber().current && $scope.yearUsed === $scope.weekNumber().yearCurrent) {
       return true;
     }
     return false;
-  };
-
-  // Display the start and end time of a lesson
-  $scope.lessonStartEndTime = function(start, end) {
-    var startTime = moment(start);
-    var endTime = moment(end);
-
-    return startTime.format('H:m') + ' - ' + endTime.format('H:m');
   };
 
   dataService.getSuggestions().then(function(payload) {
@@ -147,12 +128,12 @@ function TimeTableCtrl($scope, $http, hourService, $window, $location, dataServi
 
   // Fired when a search suggestion is selected
   $scope.searchSelected = function(selected) {
-    var title = selected.originalObject.name;
+    var title = encode(selected.originalObject.name);
     var category = selected.originalObject.category;
 
     // Check which category is selected (room or class) to update the url
     console.log('Autocomplete ' + category + ' ' + title);
-    $location.path('/' + category + '/' + title);
+    $location.path('/search/' + category + '/' + title);
   };
 
   $scope.teacherDialog = function(teacherAbr) {
@@ -179,7 +160,7 @@ function HolidaysCtrl($scope, holidayService) {
 
 // Holidays dialog
 function RoomsCtrl($scope, roomService) {
-  // Load the free rooms!
+  // Load all the rooms with occupied information!
   roomService.getFreeRooms().then(function(payload) {
     $scope.rooms = payload;
   });
