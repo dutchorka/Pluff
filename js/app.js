@@ -3,7 +3,7 @@
 var APIconfig = {
   rawUrl: 'https://apps.fhict.nl/api/v1',
   callback: '&callback=JSON_CALLBACK',
-  loginUrl: 'https://portal.fhict.nl/CookieAuth.dll?GetLogon?reason=0&formdir=6',
+  loginUrl: 'https://apps.fhict.nl/link/pluff',
   url: function(url) {
     // Enclose the given _relative_ url with the absolute url + callback.
     // TODO: Replace ampersand with questionmark if needed (maybe not necessary?)
@@ -32,7 +32,7 @@ angular.module('pluffApp', [
     responseError: function(rejection) {
       // This is temporary. TODO: Redirect only if the user isn't logged in.
       // TODO: Redirect back to pluff
-      // window.location = APIconfig.loginUrl;
+      window.location = APIconfig.loginUrl;
 
       if (rejection.status === 404) {
         // TODO: Change the view to a 404 template
@@ -113,4 +113,9 @@ angular.module('pluffApp', [
   $translateProvider.preferredLanguage('nl');
   // Save the user's choice in a cookie
   $translateProvider.useCookieStorage();
+})
+.run(function($rootScope) {
+  $rootScope.encode = function(url) {
+    return encodeURIComponent(url).replace(/\//g, '%2F');
+  };
 });
