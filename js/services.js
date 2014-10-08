@@ -7,36 +7,17 @@ angular.module('pluffApp.services', [])
     var data = {};
 
     data.generateColor = function(name) {
-      // Number between 0 and 1
-      var generatedNumber = (Math.sin(name.charCodeAt(0)) + Math.sin(name.charCodeAt(1)) + Math.sin(name.charCodeAt(2))) / 6 + 0.5;
+      // Generator seed, can be every high number (above ~ 6 million)
+      var total = 6000000;
 
-      // Create whole numbers between 0 and 5
-      var type = Math.floor(generatedNumber * 6);
-
-      // Create a number based on generatedNumber between 64 en 226 -> naar HEX
-      var value = Math.floor((Math.sin(generatedNumber * 2000) + 1) * 81 + 64).toString(16);
-      if (value.length === 1) {
-        value = '0' + value;
+      // Loop every character and multiply with the generator seed
+      for (var i = 0; i < name.length; i++) {
+        total = total * name.charCodeAt(i);
       }
 
-      // Choose part of the color based on the outcome of type (so we can control the colors a little)
-      switch (type) {
-        case 0:
-          return '#e440' + value;
-        case 1:
-          return '#' + value + '40e4';
-        case 2:
-          return '#40' + value + 'e4';
-        case 3:
-          return '#40e4' + value;
-        case 4:
-          return '#' + value + 'e440';
-        case 5:
-        case 6:
-          return '#e4' + value + '40';
-        default:
-          return '#fff';
-      }
+      var color = total.toString(16).substr(2, 6);
+
+      return '#' + color;
     };
 
     data.getTimeTable = function(payload) {
